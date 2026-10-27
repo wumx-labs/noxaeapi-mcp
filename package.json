@@ -1,0 +1,37 @@
+{
+  "name": "@wumx-labs/noxaeapi-mcp",
+  "version": "1.0.0",
+  "description": "Official Model Context Protocol (MCP) server for NoxAeApi - control Minecraft servers & Velocity networks from any AI agent",
+  "author": "wumx",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "bin": {
+    "noxae-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "@wumx-labs/noxaeapi-sdk": "^0.6.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
