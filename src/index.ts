@@ -10,8 +10,12 @@ import { registerWorldTools } from "./tools/worlds.js";
 import { registerPluginTools } from "./tools/plugins.js";
 import { registerDispatchTools } from "./tools/dispatch.js";
 import { registerLeaderboardTools } from "./tools/leaderboard.js";
+import { registerRankForgeTools } from "./tools/rankforge.js";
 import { registerAllSdkModules } from "./tools/auto-register.js";
 import { getSession } from "./client.js";
+
+declare const __MCP_NAME__: string | undefined;
+declare const __MCP_VERSION__: string | undefined;
 
 async function main() {
   try {
@@ -26,8 +30,8 @@ async function main() {
   }
 
   const server = new McpServer({
-    name: "noxaeapi-mcp",
-    version: "1.0.0",
+    name: typeof __MCP_NAME__ !== "undefined" ? __MCP_NAME__ : "noxaeapi-mcp",
+    version: typeof __MCP_VERSION__ !== "undefined" ? __MCP_VERSION__ : "1.0.1",
   });
 
   const registeredNames = new Set<string>();
@@ -98,6 +102,18 @@ async function main() {
     "leaderboards_get_top",
   ]);
 
+  registerRankForgeTools(server);
+  track([
+    "rankforge_get_player_stats",
+    "rankforge_get_points",
+    "rankforge_set_points",
+    "rankforge_add_points",
+    "rankforge_remove_points",
+    "rankforge_list_tiers",
+    "rankforge_get_top",
+    "rankforge_save",
+  ]);
+
   registerWorldTools(server);
   track([
     "worlds_list",
@@ -149,6 +165,8 @@ Follow these operational guidelines to make accurate, reliable decisions:
 3. LEADERBOARD DECISION TREE:
    - For gameplay rankings (kills, deaths, playtime, mcmmo, auraskills): use 'leaderboards_get_top' with IDs like 'player:kills', 'player:deaths', 'player:playtime'.
    - Use 'leaderboards_list' to discover valid game stats (it automatically filters internal noise).
+   - For RankForge PvP tier/points rankings: use 'rankforge_get_top' or the generic 'leaderboards_get_top' with id 'rankforge:points' or 'rankforge:kills'.
+   - To inspect or modify a specific player's RankForge points: use 'rankforge_get_player_stats', 'rankforge_set_points', 'rankforge_add_points', 'rankforge_remove_points'.
 
 4. PERFORMANCE & DIAGNOSTICS:
    - For lag or TPS inquiries: call 'server_get_status'. TPS: 20.0 is perfect, <18.0 is lagging.
